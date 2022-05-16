@@ -1,0 +1,78 @@
+﻿@page
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Log in";
+}
+
+
+<div style="margin-left: auto; margin-right: auto; padding-top: 100px; margin-bottom: 20%">
+    <form class="main-form" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+        <hr />
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <h1 style="text-align:center">Авторизація</h1>
+        <div class="form-label">
+            <label asp-for="Input.Email">Пошта</label>
+            <input asp-for="Input.Email" class="form-control" />
+            <span asp-validation-for="Input.Email" class="text-danger"></span>
+        </div>
+        <div class="form-label">
+            <label asp-for="Input.Password">Пароль</label>
+            <input asp-for="Input.Password" class="form-control" />
+            <span asp-validation-for="Input.Password" class="text-danger"></span>
+        </div>
+        <div style="text-align:center" class="form-label">
+            <button type="submit" class="button">Увійти</button>
+        </div>
+        <div class="d-flex justify-content-between">
+            <p>
+            </p>
+            <p>
+                <a id="forgot-password" style="color: black; padding-top: 10px;padding-right:55px;" asp-page="./Register"><u>Не маєте акаунту?</u></a>
+            </p>
+        </div>
+
+    </form>
+</div>
+
+<style>
+    .button, label, input, h1{
+        font-family:'Bluu Next Cyrillic';
+    }
+    body {
+        background-color: #f6f0dc;
+    }
+
+    .form-label {
+        width: 50%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .main-form {
+        background-color: #ffffff;
+        margin-left: 30%;
+        margin-right: 30%;
+        box-shadow: 0 0 10px #555555;
+        border-radius: 10px;
+    }
+
+    .button {
+        padding-top: 2px;
+        padding-bottom: 2px;
+        padding-left: 20px;
+        padding-right: 20px;
+        margin-top: 3%;
+        margin-bottom: 3%;
+        background-color: #b82406;
+        color: #ffffff;
+        border: 0px;
+        border-radius: 7px;
+    }
+
+</style>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

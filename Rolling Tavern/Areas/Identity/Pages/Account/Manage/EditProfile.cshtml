@@ -1,0 +1,110 @@
+﻿@page
+@model EditProfileModel
+@{
+    ViewData["Title"] = "Зміна даних";
+    ViewData["ActivePage"] = ManageNavPages.EditProfile;
+}
+@*
+
+*@
+
+<partial name="_StatusMessage" model="Model.StatusMessage" />
+<div class="row" style="font-family:'Bluu Next Cyrillic'">
+    <section class="profileLeft" style="background-color:white">
+        <h4 style="font-family:'Bluu Next Cyrillic';text-align:center;margin-top:5px;">@ViewData["Title"]</h4>
+        <form id="profile-form" method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-row profile-row">
+                <div class="col-md-8">
+                    @*<form>
+            <fieldset disabled>
+                <input type="string" disabled="true" class="form-control" value=""></input>
+                <input type="string" disabled="true" class="form-control" value="@"></input>
+            </fieldset>
+        </form>*@
+                    <div class="form-group">
+                        <a>
+                            Нікнейм
+                        </a>
+                    </div>
+                    <div class="form-group">
+                        <a>
+                            @Model.Username
+                        </a>
+                    </div>
+                    <div class="form-group">
+                        <a>
+                            Поштова скринька
+                        </a>
+                    </div>
+                    <div class="form-group">
+                        <a>
+                            @Model.Email
+                        </a>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Input.FirstName">Ім`я</label>
+                        <input asp-for="Input.FirstName" class="form-control" enabled />
+                        <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Input.LastName">Прізвище</label>
+                        <input asp-for="Input.LastName" class="form-control" enabled />
+                        <span asp-validation-for="Input.LastName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Input.PhoneNumber">Номер телефону</label>
+                        <input asp-for="Input.PhoneNumber" class="form-control" enabled />
+                        <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <span asp-validation-for="Input.ProfilePicture" class="text-danger"></span>
+                        <input asp-for="Input.ProfilePicture" type="file" id="fileUpload" accept="image/png,image/jpg,image/jpeg,.gif" onchange="readURL(this);" />
+                        <img id="blah" src="#" alt="Оберіть фото профілю" style="margin-top: 20px; margin-bottom: 5px" />
+                    </div>
+                </div>
+            </div>
+            <button id="update-profile-button" type="submit" class="btn btn-primary align-middle" style="margin:auto;margin-bottom:10px;display:flex; font-family: 'Bluu Next Cyrillic'; background: #B82406;font-size:20px;">Зберегти</button>
+        </form>
+    </section>
+
+    <script>
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                var h = $('#blah').height();
+                var w = $('#blah').width();
+                reader.onload = function (e) {
+                    $('#blah')
+                        .attr('src', e.target.result)
+                        .width(150)
+                        .height(150);
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
+    <style>
+        .form-group {
+            margin-left: 50px;
+            margin-top: 5px;
+        }
+
+        .editbody {
+        }
+
+        section.profileLeft {
+            color: black;
+            border: 1px solid black;
+            height: 100%;
+            width: 90%;
+            border-radius: 10px;
+        }
+    </style>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

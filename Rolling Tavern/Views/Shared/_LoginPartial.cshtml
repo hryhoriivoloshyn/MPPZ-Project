@@ -1,0 +1,35 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+<ul class="navbar-nav">
+    @if (SignInManager.IsSignedIn(User))
+    {
+        if (User.IsInRole("user"))
+        {
+            <li class="nav-item">
+                <a class="nav-link text-white" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">@User.Identity.Name</a>
+            </li>
+        }
+        if (User.IsInRole("admin"))
+        {
+            <li class="nav-item">
+                <a class="nav-link text-white">@User.Identity.Name</a>
+            </li>
+        }
+        <li class="nav-item">
+            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                <button type="submit" class="nav-link btn btn-link text-white" style="font-family: 'Bluu Next Cyrillic';border-radius:5px;border-color:white;">Вийти</button>
+            </form>
+        </li>
+    }
+    else
+    {
+        <li class="nav-item" style="border:white;border-style:solid; border-radius: 5px; ">
+            <a class="nav-link text-white" asp-area="Identity" asp-page="/Account/Login">Увійти</a>
+        </li>
+        <li class="nav-item" style="border:white;border-style:solid; margin-left:40px; border-radius: 5px;">
+            <a class="nav-link text-white" asp-area="Identity" asp-page="/Account/Register">Зареєструватися</a>
+        </li>
+    }
+</ul>

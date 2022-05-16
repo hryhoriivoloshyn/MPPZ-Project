@@ -1,0 +1,116 @@
+﻿@page
+@model RegisterModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+
+
+    <div style="margin-left: auto; margin-right: auto">
+        <form class="main-form" asp-route-returnUrl="@Model.ReturnUrl" method="post" enctype="multipart/form-data">
+            <hr />
+            <h1 style="text-align: center">Реєстрація</h1>
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-label">
+                <label asp-for="Input.Email"></label>
+                <input asp-for="Input.Email" class="form-control" type="email"/>
+                <span asp-validation-for="Input.Email" class="text-danger"></span>
+            </div>
+
+            <div class="form-label">
+                <label asp-for="Input.UserName"></label>
+                <input asp-for="Input.UserName" class="form-control" />
+                <span asp-validation-for="Input.UserName" class="text-danger"></span>
+            </div>
+
+            <div class="form-label">
+                <label asp-for="Input.Phone"></label>
+                <input asp-for="Input.Phone" type="tel" class="form-control" />
+                <span asp-validation-for="Input.Phone" class="text-danger"></span>
+            </div>
+
+            <div class="form-label">
+                <label asp-for="Input.ProfilePicture"></label>
+                <input asp-for="Input.ProfilePicture" type="file" id="fileUpload" accept="image/png,image/jpg,image/jpeg,.gif" />
+                <span asp-validation-for="Input.ProfilePicture" class="text-danger"></span>
+            </div>
+
+            <div class="form-label">
+                <label asp-for="Input.FirstName"></label>
+                <input asp-for="Input.FirstName" class="form-control" />
+                <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+            </div>
+
+            <div class="form-label">
+                <label asp-for="Input.LastName"></label>
+                <input asp-for="Input.LastName" class="form-control" />
+                <span asp-validation-for="Input.LastName" class="text-danger"></span>
+            </div>
+
+            <div class="form-label">
+                <label asp-for="Input.DateOfBirth"></label>
+                <input asp-for="Input.DateOfBirth" class="form-control" max="@DateTime.Now.Date.AddYears(-14).ToString("yyyy-MM-dd")"/>
+                <span asp-validation-for="Input.DateOfBirth" class="text-danger"></span>
+            </div>
+
+            <div class="form-label">
+                <label asp-for="Input.Password"></label>
+                <input asp-for="Input.Password" class="form-control" />
+                <span asp-validation-for="Input.Password" class="text-danger"></span>
+            </div>
+
+            <div class="form-label">
+                <label asp-for="Input.ConfirmPassword"></label>
+                <input asp-for="Input.ConfirmPassword" class="form-control" />
+                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+            </div>
+
+            <div style="text-align: center" class="form-label">
+                <button asp-page-handler="Upload" type="submit" class="button">Зареєструватися</button>
+            </div>
+        </form>
+    </div>
+
+<style>
+    label{
+        font-family:'Bluu Next Cyrillic';
+    }
+    h1{
+        font-family:'Bluu Next Cyrillic';
+        margin-top:10px
+    }
+    body {
+        background-color: #f6f0dc;
+    }
+
+    .form-label {
+        width: 50%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .main-form {
+        background-color: #ffffff;
+        margin-left: 30%;
+        margin-right: 30%;
+        margin-bottom: 10%;
+        box-shadow: 0 0 10px #555555;
+        border-radius: 10px;
+    }
+
+    .button {
+        font-family: 'Bluu Next Cyrillic';
+        position: relative;
+        top: 30px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        padding-left: 20px;
+        padding-right: 20px;
+        margin-top: 3%;
+        margin-bottom: 3%;
+        background-color: #b82406;
+        color: #ffffff;
+        border: 0px;
+        border-radius: 7px;
+    }
+</style>

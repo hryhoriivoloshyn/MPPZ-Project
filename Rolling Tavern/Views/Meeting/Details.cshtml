@@ -1,0 +1,407 @@
+﻿@using Rolling_Tavern.Services
+@model Rolling_Tavern.Controllers.MeetingController.CurrentInfo
+
+@{
+    ViewData["Title"] = "Details";
+}
+@{
+    if(Model.CurrentUser!=null)
+    {
+        Model.Role = User.IsInRole("admin");
+    }
+    else
+    {
+        Model.Role = false;
+    }
+    static int GetAge(DateTime birthDate)
+    {
+        var now = DateTime.Today;
+        return now.Year - birthDate.Year - 1 +
+            ((now.Month > birthDate.Month || now.Month == birthDate.Month && now.Day >= birthDate.Day) ? 1 : 0);
+    }
+    bool check = false;
+    Request request = new Request();
+    if (Model.CurrentUser!=null)
+    {
+        List<Request> requests = Model.CurrentMeeting.Requests.Where(i => i.UserId == Model.CurrentUser.Id).ToList();
+        if (requests.Any() == true && Model.CurrentMeeting.CreatorId != Model.CurrentUser.Id && !Model.Role)
+        {
+            request = Model.CurrentMeeting.Requests.Where(r => r.UserId == Model.CurrentUser.Id).First();
+            if (request != null)
+                check = true;
+        }
+    }
+}
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+<link href="https://api.mapbox.com/mapbox-gl-js/v2.6.0/mapbox-gl.css" rel="stylesheet">
+<script src="https://api.mapbox.com/mapbox-gl-js/v2.6.0/mapbox-gl.js"></script>
+<script src="~/js/map.js"></script>
+
+<div class="page-content" onload="setAddress()">
+    <h2 style="text-align:center">@Model.CurrentMeeting.MeetingName</h2>
+    <hr style="width:60vw" />
+
+    <div class="row justify-content-around">
+        <div class="col-4" style="margin-left:250px; width:fit-content;">
+            <div class="form-row profile-row">
+                <div class="col-md-8">
+                    <div class="form-group">
+                        <img src="@Model.CurrentMeeting.PhotoLink" style="margin-top:10px; max-width: 450px; max-height: 350px;" />
+                    </div>
+                    <div class="form-group">
+                        @if (Model.CurrentMeeting.GameId != 1)
+                        {
+                            <h5>Гра: <a href="/BoardGames/Details/@Model.CurrentMeeting.GameId"><u>@Model.CurrentMeeting.Game.GameName</u></a></h5>
+                            <label>Дата проведення зустрічі: @Model.CurrentMeeting.DateOfMeeting</label>
+                        }
+                        else
+                        {
+                            <h5>Гра: <u>@Model.CurrentMeeting.Game.GameName</u></h5>
+                            <label>Дата проведення зустрічі: @Model.CurrentMeeting.DateOfMeeting</label>
+                        }
+                    </div>
+                    <div class="form-group">
+                        <h5>Опис зустрічі: </h5>
+                        <label>@Model.CurrentMeeting.Description</label>
+                    </div>
+                    <div class="form-group">
+                        <h5>Додаткові вимоги до учасників: </h5>
+                        <label>@Model.CurrentMeeting.AdditionalRequirements</label>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-4" id="mod" style="right:100px">
+            <div class="form-row profile-row">
+                <div class="col-md-8">
+                    <div class="form-group">
+                        <h5>Організатор зустрічі: </h5>
+                        <div class="form-row">
+                            <img src="@Model.CurrentMeeting.Creator.ProfilePicture" class="round" style="height: 100px; width: 100px;" />
+                            <div style="margin-top: auto; margin-bottom: auto;">
+                                <h5 style="margin-left:25px;">@Model.CurrentMeeting.Creator.FirstName</h5>
+                            </div>
+                        </div>
+                        <div>
+                            @if (Model.CurrentUser == null)
+                            {
+                                <label style="text-align: center; margin-left: 15px; margin-top: 15px;">
+                                    Телефон організатора буде
+                                    доступний після вступу до гри.
+                                </label>
+                            }
+                            else if (Model.CurrentMeeting.CreatorId == Model.CurrentUser.Id || Model.Role)
+                            {
+                                if (Model.CurrentMeeting.Creator.PhoneNumber == null)
+                                {
+                                    <label style="text-align: center; margin-left: 45px; margin-top: 15px;">Номера телефону немає.</label>
+                                }
+                                else
+                                {
+                                    <label style="text-align: center; margin-left: 45px; margin-top: 15px;">Номер телефону: @Model.CurrentMeeting.Creator.PhoneNumber</label>
+                                }
+                            }
+                            else if (check && request.StateId == 1)
+                            {
+                                <label style="text-align: center; margin-left: 15px; margin-top: 15px;">
+                                    Телефон організатора буде
+                                    доступний після вступу до гри.
+                                </label>
+                            }
+                            else if (check && request.StateId == 2)
+                            {
+                                if (Model.CurrentMeeting.Creator.PhoneNumber == null)
+                                {
+                                    <label style="text-align: center; margin-left: 45px; margin-top: 15px;">Номера телефону немає.</label>
+                                }
+                                else
+                                {
+                        <label style="text-align: center; margin-left: 45px; margin-top: 15px;">Номер телефону: @Model.CurrentMeeting.Creator.PhoneNumber</label>
+                                }
+                            }
+                            else if (check && request.StateId == 3)
+                            {
+                                <label style="text-align: center; margin-left: 15px; margin-top: 15px;">
+                                    Телефон організатора доступний
+                                    тільки після вступу до гри.
+                                </label>
+                            }
+                            else
+                            {
+                                <label style="text-align: center; margin-left: 15px; margin-top: 15px;">
+                                    Телефон організатора буде
+                                    доступний після вступу до гри.
+                                </label>
+                            }
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @if (Model.CurrentMeeting.Requests.Any() == true && !check)
+                        {
+                            <label style="text-align:center;">
+                                @Model.CurrentMeeting.Requests.Count(i => i.StateId == 2) з @Model.CurrentMeeting.Game.MaxAmountOfPlayers гравців знайдено,
+                                стань наступним!
+                            </label>
+                        }
+                        else if (check && request.StateId == 1)
+                        {
+                            <label style="text-align:center;">
+                                @Model.CurrentMeeting.Requests.Count(i => i.StateId == 2) з @Model.CurrentMeeting.Game.MaxAmountOfPlayers гравців знайдено,
+                                ви можете стати наступним!
+                            </label>
+                        }
+                        else if (check && request.StateId == 2)
+                        {
+                            <label style="text-align:center;">
+                                @Model.CurrentMeeting.Requests.Count(i => i.StateId == 2) з @Model.CurrentMeeting.Game.MaxAmountOfPlayers гравців знайдено!
+                            </label>
+                        }
+                        else if (check && request.StateId == 3)
+                        {
+                            <label style="text-align:center;">
+                                Нажаль, ви не можете приймати участь в цій зустрічі.
+                            </label>
+                        }
+                        else
+                        {
+                            <label style="text-align:center;">Гравців ще не знайдено.</label>
+                        }
+                    </div>
+                    <div class="form-group">
+                        @if (Model.Role)
+                        {
+                            <a type="button" style="text-align: center; font-family: Bluu Next Cyrillic; border-radius: 5px; border: 2px; border-style:solid; border-color: black; text-decoration: 0px; color: black; margin-top: 15px; padding: 3px; padding-left: 10px; padding-right: 10px; width:70%;" asp-action="Delete" asp-route-id="@Model.CurrentMeeting.MeetingId">Видалити зустріч</a>
+                        }
+                        else if (Model.CurrentUser == null)
+                        {
+                            <form asp-action="Details" method="post">
+                                <input type="hidden" asp-for="CurrentMeeting.MeetingId" />
+                                <input type="submit" value="Прийняти участь!" class="nav-link text-white" style="text-align: center; font-size:20px; font-family: Bluu Next Cyrillic; background: #B82406; border: 0px; border-radius: 5px; padding: 5px; padding-left: 10px; padding-right: 10px; width:70%;" class="btn btn-primary" />
+                            </form>
+                        }
+                        else if (Model.CurrentMeeting.CreatorId == Model.CurrentUser.Id)
+                        {
+                            <a type="button" class="nav-link text-white" style="text-align: center; font-family: Bluu Next Cyrillic; background: #B82406; border-radius: 5px; padding: 5px; padding-left: 10px; padding-right: 10px; width:70%;" asp-action="Edit" asp-route-id="@Model.CurrentMeeting.MeetingId">Редагувати зустріч</a>
+                            <a type="button" class="nav-link text-white" style="text-align: center; font-family: Bluu Next Cyrillic; background: #B82406; border-radius: 5px; margin-top: 15px; padding: 5px; padding-left: 10px; padding-right: 10px; width:70%;" asp-action="ShowRequests" asp-route-id="@Model.CurrentMeeting.MeetingId">Переглянути заявки</a>
+                            <a type="button" style="text-align: center; font-family: Bluu Next Cyrillic; border-radius: 5px; border: 2px; border-style:solid; border-color: black; text-decoration: 0px; color: black; margin-top: 15px; padding: 3px; padding-left: 10px; padding-right: 10px; width:70%;" asp-action="Delete" asp-route-id="@Model.CurrentMeeting.MeetingId">Видалити зустріч</a>
+                        }
+                        else if (check && request.StateId == 1)
+                        {
+                            <label>Організатор розглядає вашу заявку.</label>
+                            <form asp-action="ExitMeeting" method="post">
+                                <input type="hidden" name="meetingId" value="@Model.CurrentMeeting.MeetingId" />
+                                <input type="submit" value="Покинути зустріч" class="nav-link text-white" style="text-align: center; font-size:20px; font-family: Bluu Next Cyrillic; background: #B82406; border: 0px; border-radius: 5px; padding: 5px; padding-left: 10px; padding-right: 10px; width:70%;" />
+                            </form>
+                        }
+                        else if (check && request.StateId == 2)
+                        {
+                            <label>Організатор прийняв вашу заявку.</label>
+                            <form asp-action="ExitMeeting" method="post">
+                                <input type="hidden" name="meetingId" value="@Model.CurrentMeeting.MeetingId"/>
+                                <input type="submit" value="Покинути зустріч" class="nav-link text-white" style="text-align: center; font-size:20px; font-family: Bluu Next Cyrillic; background: #B82406; border: 0px; border-radius: 5px; padding: 5px; padding-left: 10px; padding-right: 10px; width:70%;" />
+                            </form>
+                        }
+                        else if (check && request.StateId == 3)
+                        {
+                            <label>Організатор відхилив вашу заявку.</label>
+                        }
+                        else if(check && request.StateId==4)
+                        {
+                            <label>Ви покинули цю зустріч.</label>
+                        }
+                        else
+                        {
+                            <form asp-action="Details" method="post">
+                                <input type="hidden" asp-for="CurrentMeeting.MeetingId" />
+                                <input type="submit" value="Прийняти участь!" class="nav-link text-white" style="text-align: center; font-size:20px; font-family: Bluu Next Cyrillic; background: #B82406; border: 0px; border-radius: 5px; padding: 5px; padding-left: 10px; padding-right: 10px; width:70%;" class="btn btn-primary" />
+                            </form>
+                        }
+                    </div>
+                    <div class="form-group">
+                        @if (Model.CurrentMeeting.MinimalAge == null)
+                        {
+                            <label>Вікові обмеження: +@Model.CurrentMeeting.Game.MinAgeOfPlayers</label>
+                        }
+                        else
+                        {
+                            <label>Вікові обмеження: +@Model.CurrentMeeting.MinimalAge</label>
+                        }
+                    </div>
+
+                    <div class="form-group">
+                        <h5>Адреса зустрічі:</h5>
+                        <label id="address">@Model.CurrentMeeting.AddresOfMeeting</label>
+                    </div>
+                    <div class="form-group" id="map"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @if (Model.CurrentUser != null)
+    {
+        if (Model.CurrentMeeting.CreatorId == Model.CurrentUser.Id || Model.Role)
+        {
+            if (Model.CurrentMeeting.Requests.Where(i => i.StateId == 2).Any())
+            {
+                <div class="form-group" id="role">
+                    <table cellpadding="5" border="2" bordercolor="black" style="margin-left:21%; table-layout:fixed; text-align:center;">
+                        <tr>
+                            <th>
+                                Нікнейм
+                            </th>
+                            <th>
+                                Ім'я
+                            </th>
+                            <th>
+                                Email
+                            </th>
+                            <th>
+                                Репутація
+                            </th>
+                            @if (Model.CurrentMeeting.DateOfMeeting <= DateTime.Now)
+                            {
+                                <th>
+                                Оцінити користувача
+                                </th>
+                            }
+                            <th>
+                                Вік
+                            </th>
+                        </tr>
+                        @foreach (var item in Model.CurrentMeeting.Requests.Where(i => i.StateId == 2).ToList())
+                        {
+                    <tr>
+                        <td>
+                            @item.User.UserName
+                        </td>
+                        <td>
+                            @item.User.FirstName
+                        </td>
+                        <td>
+                            @item.User.Email
+                        </td>
+                        <td>
+                            <center>
+                                <img src="@RatingManager.GetRatingImage(item.User.Rating)" alt="" style="height: 35px; width: 35px;">
+                            </center>
+                        </td>
+                            @if (Model.CurrentMeeting.DateOfMeeting <= DateTime.Now)
+                            {
+                                <td >
+                                    @if (!item.Rated)
+                                    {
+                                        <div class="d-flex flex-row">
+                                            <a class="dropdown-item" asp-action="RateUser" asp-route-meetingId="@item.Meeting.MeetingId" asp-route-userId="@item.User.Id" asp-route-evaluation="true">&#128077</a>
+                                            <a class="dropdown-item" asp-action="RateUser" asp-route-meetingId="@item.Meeting.MeetingId" asp-route-userId="@item.User.Id" asp-route-evaluation="false">	&#128078</a>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <center>
+                                            Користувача оцінено
+                                        </center>
+                                    }
+                                </td>
+                            }
+                       
+                       
+
+                        <td>
+                            @GetAge((DateTime)item.User.DateOfBirth)
+                        </td>
+                    </tr>
+                        }
+                    </table>
+                </div>
+            }
+        }
+    }
+    <div>
+        <center>
+            <div>
+                <a asp-action="Index" style="text-align:right;color:#333333;" class="text-muted">До списку зустрічей</a>
+
+            </div>
+        </center>
+    </div>
+
+</div>
+<style>
+    .form-group, h2, h5, h6 {
+        font-family: 'Bluu Next Cyrillic';
+        color: #333333;
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+    }
+
+    .round {
+        height: 50%;
+        border-radius: 100px; /* Радиус скругления */
+        border: 3px solid black; /* Параметры рамки */
+        box-shadow: 0 0 7px #666; /* Параметры тени */
+    }
+
+    #map {
+        height: 200px;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+    }
+</style>
+    <script>
+        window.onload = function () {
+            setAddress();
+        }
+    </script>
+
+<script>
+    ScriptProcessorNode
+    // TO MAKE THE MAP APPEAR YOU MUST
+    // ADD YOUR ACCESS TOKEN FROM
+    // https://account.mapbox.com
+    mapboxgl.accessToken = 'pk.eyJ1IjoidHN1cmlrYXBwYSIsImEiOiJja3Z3anY2czcwZjU1Mm5vZWZjNDF3YXppIn0.15HnrAoUseWpJvYgD8a1eg';
+    const mapboxClient = mapboxSdk({ accessToken: mapboxgl.accessToken });
+    var address;
+
+    function setAddress() {
+        address = document.getElementById('address').textContent;
+        mapboxClient.geocoding
+            .forwardGeocode({
+                query: address + ', Харьков',
+                autocomplete: false,
+                limit: 1
+            })
+            .send()
+            .then((response) => {
+                if (
+                    !response ||
+                    !response.body ||
+                    !response.body.features ||
+                    !response.body.features.length
+                ) {
+                    console.error('Invalid response:');
+                    console.error(response);
+                    return;
+                }
+                const feature = response.body.features[0];
+
+                const map = new mapboxgl.Map({
+                    container: 'map',
+                    style: 'mapbox://styles/mapbox/streets-v11',
+                    center: feature.center,
+                    zoom: 10
+                });
+
+                // Create a marker and add it to the map.
+                new mapboxgl.Marker().setLngLat(feature.center).addTo(map);
+            });
+    }
+</script>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
