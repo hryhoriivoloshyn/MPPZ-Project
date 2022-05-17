@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Rolling_Tavern.Data;
+using Rolling_Tavern.Enums;
 using Rolling_Tavern.Models;
 
 namespace Rolling_Tavern.Controllers
@@ -270,10 +271,11 @@ namespace Rolling_Tavern.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "user")]
-        public async Task<IActionResult> Create([Bind("MeetingId,MeetingName,DateOfMeeting,AddresOfMeeting,Description,AdditionalRequirements,PhotoLink,CreatorId,GameId,MinimalAge")] Meeting meeting, IFormFile meetingPicture)
+        public async Task<IActionResult> Create([Bind("MeetingId,MeetingName,DateOfMeeting,AddresOfMeeting,Description,AdditionalRequirements,PhotoLink,CreatorId,MinimalAge")] Meeting meeting, IFormFile meetingPicture)
         {
             if (ModelState.IsValid)
             {
+                meeting.GameId = StaticValues.DefaultGameId;
                 var picturePath = await UploadPicture(meetingPicture, meeting);
                 var loginedUser = await _userManager.GetUserAsync(User);
                 long userId = Convert.ToInt64(await _userManager.GetUserIdAsync(loginedUser));

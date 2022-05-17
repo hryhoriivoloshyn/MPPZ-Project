@@ -16,7 +16,7 @@ namespace Rolling_Tavern.Models
         [Display(Name = "Назва зустрічі")]
         public string MeetingName { get; set; }
 
-        [Required(ErrorMessage = "{0} повинні бути обрані.")]
+        //[Required(ErrorMessage = "{0} повинні бути обрані.")]
         [Display(Name = "Дата та час проведення зустрічі")]
         [DataType(DataType.DateTime)]
         public DateTime DateOfMeeting { get; set; }
