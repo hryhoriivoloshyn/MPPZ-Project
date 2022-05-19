@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Rolling_Tavern.Data;
 
 namespace Rolling_Tavern.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220518173039_comm")]
+    partial class comm
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -294,9 +296,7 @@ namespace Rolling_Tavern.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("CommentContent")
-                        .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("DateOfComment")
                         .HasColumnType("datetime2");
@@ -310,7 +310,7 @@ namespace Rolling_Tavern.Migrations
 
                     b.HasIndex("MeetingId");
 
-                    b.ToTable("Comments");
+                    b.ToTable("Comment");
                 });
 
             modelBuilder.Entity("Rolling_Tavern.Models.GameImage", b =>
@@ -481,7 +481,7 @@ namespace Rolling_Tavern.Migrations
             modelBuilder.Entity("Rolling_Tavern.Models.Comment", b =>
                 {
                     b.HasOne("Rolling_Tavern.Models.ApplicationUser", "Author")
-                        .WithMany("Comments")
+                        .WithMany()
                         .HasForeignKey("AuthorId");
 
                     b.HasOne("Rolling_Tavern.Models.Meeting", "Meeting")
@@ -554,8 +554,6 @@ namespace Rolling_Tavern.Migrations
 
             modelBuilder.Entity("Rolling_Tavern.Models.ApplicationUser", b =>
                 {
-                    b.Navigation("Comments");
-
                     b.Navigation("CreatedMeetings");
 
                     b.Navigation("Requests");

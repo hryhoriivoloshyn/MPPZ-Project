@@ -22,6 +22,7 @@ namespace Rolling_Tavern.Data
         public virtual DbSet<Request> Requests { get; set; }
         public virtual DbSet<State> States { get; set; }
         public virtual DbSet<GameImage> GameImages { get; set; }
+        public virtual DbSet<Comment> Comments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -89,6 +90,23 @@ namespace Rolling_Tavern.Data
                     .HasConstraintName("FK_Meetings_BoardGames");
             });
 
+            builder.Entity<Comment>(entity =>
+            {
+                entity.HasKey(e => e.CommentId);
+
+                entity.HasOne(d => d.Author)
+                .WithMany(p => p.Comments)
+                .HasForeignKey(d => d.AuthorId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK_Comments_AspNetUsers_AuthorId");
+
+                entity.HasOne(d => d.Meeting)
+                .WithMany(p => p.Comments)
+                .HasForeignKey(d => d.MeetingId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK_Comments_Meetings_MeetingId");
+            });
+
             builder.Entity<Request>(entity =>
             {
                 
@@ -128,8 +146,6 @@ namespace Rolling_Tavern.Data
                     .IsRequired()
                     .HasMaxLength(450);
             });
-
-            
 
 
             builder.Entity<ApplicationUser>()

@@ -50,6 +50,6 @@ namespace Rolling_Tavern.Models
         public virtual ApplicationUser Creator { get; set; }
 
         public virtual ICollection<Request> Requests { get; set; }
-        
+        public virtual ICollection<Comment> Comments { get; set; }
     }
 }

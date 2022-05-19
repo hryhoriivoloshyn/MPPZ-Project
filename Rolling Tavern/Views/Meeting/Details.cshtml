@@ -5,6 +5,7 @@
     ViewData["Title"] = "Details";
 }
 @{
+    
     if(Model.CurrentUser!=null)
     {
         Model.Role = User.IsInRole("admin");
@@ -317,6 +318,76 @@
             }
         }
     }
+    <div>
+        <center>
+            <div>
+                <h4 style="text-align:center">
+                    Коментарі
+                </h4>
+                @if(Model.CurrentUser!=null && Model.CurrentUser.Id!=Model.CurrentMeeting.CreatorId && Model.Role==false)
+            {
+                    <div class="container" style="margin-bottom:">
+                        <div class="row">
+                            <div class="col">
+                                <h5>Напишість свій коментар:</h5>
+                            </div>
+                            <div class="col-7">
+                                <form asp-action="CreateComment" method="post">
+                                    <div class="row">
+                                        <div class="col-7">
+                                            <textarea name="commentText" cols="35" rows="3"></textarea>
+                                            <input type="hidden" name="id" value="@Model.CurrentMeeting.MeetingId" />
+                                        </div>
+                                        <div class="col-3">
+                                            <input type="submit" style="font-family: 'Bluu Next Cyrillic'; background: #B82406;font-size:20px;margin-top:30px" value="Створити" class="btn btn-primary" />
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+            }
+                <hr style="margin-left: 150px; margin-right:150px" />
+                <div style="margin-top: auto; margin-bottom: auto;">
+                    @if(!Model.CommentsEmpty)
+                    {
+                        foreach(var comment in Model.CurrentMeeting.Comments)
+                {
+                    <div class="container">
+                        <div class="row">
+                            <div class="col" style="margin-left:50px">
+                                <img src="@comment.Author.ProfilePicture" class="round" style="height: 100px; width: 100px;" />
+                                <div style="text-align:center">
+                                    <h5>@comment.Author.FirstName</h5>
+                                </div>
+                            </div>
+                            <div class="col-5">
+                                <h5 style="margin-top:auto; margin-bottom:auto;">@comment.CommentContent</h5>
+                            </div>
+                            <div class="col-4">
+                                <h5 style="margin-top:5px">@comment.DateOfComment.ToString("MM/dd/yyyy HH:mm")</h5>
+                                @if (Model.Role || comment.AuthorId == Model.CurrentUser.Id)
+                                {
+                                    <form asp-action="DeleteComment" method="post">
+                                        <input type="hidden" name="id" value="@comment.CommentId" />
+                                        <input type="submit" value="Видалити комметарій" class="nav-link text-white" style="text-align: center; font-size:20px; font-family: Bluu Next Cyrillic; background: #B82406; border: 0px; border-radius: 5px; padding: 5px; padding-left: 10px; padding-right: 10px; width:70%;" />
+                                    </form>
+                                }
+                            </div>
+                        </div>
+
+                    </div>
+                }
+                    } else
+                    {
+                <div>
+                    <label>Кометарів ще немає</label>
+                </div>
+            }
+                </div>
+            </div>
+        </center>
+    </div>
     <div>
         <center>
             <div>

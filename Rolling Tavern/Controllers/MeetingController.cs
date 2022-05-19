@@ -36,6 +36,7 @@ namespace Rolling_Tavern.Controllers
             public ApplicationUser CurrentUser;
             public Meeting CurrentMeeting;
             public bool Role { get; set; }
+            public bool CommentsEmpty { get; set; }
             public CurrentInfo() {}
             public CurrentInfo(ApplicationUser user ,Meeting meeting)
             {
@@ -56,9 +57,9 @@ namespace Rolling_Tavern.Controllers
         }
         private async Task<string> UploadPicture(IFormFile profilePicture, Meeting meeting)
         {
-            var game = await _context.BoardGames.Where(i => i.GameId == meeting.GameId).FirstOrDefaultAsync();
+            //var game = await _context.BoardGames.Where(i => i.GameId == meeting.GameId).FirstOrDefaultAsync();
             string defaultPicturePath;
-            if (game.GameId==1)
+            if (meeting.GameId==1)
             {
                 defaultPicturePath = "/GamePictures/defaultBoardGame.jpg";
             }
@@ -133,7 +134,7 @@ namespace Rolling_Tavern.Controllers
             var meetings = await GetMeetings();
           
                 ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
-            var games = await _context.BoardGames.ToListAsync();
+            //var games = await _context.BoardGames.ToListAsync();
             var users = await _context.Users.ToListAsync();
             ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
             ViewData["CurrentFilter"] = searchString;
@@ -183,6 +184,17 @@ namespace Rolling_Tavern.Controllers
                 BoardGame game = await _context.BoardGames.Where(i => i.GameId == temp.GameId).FirstOrDefaultAsync();
                 ApplicationUser creator = await _context.Users.Where(i => i.Id == temp.CreatorId).FirstOrDefaultAsync();
                 List<Request> requests = await _context.Requests.Where(i => i.MeetingId == temp.MeetingId).ToListAsync();
+                List<Comment> comments = null;
+                bool empty = true;
+                if(_context.Comments.Where(i => i.MeetingId==id).Any())
+                {
+                    comments = await _context.Comments.Where(i => i.MeetingId == id).ToListAsync();
+                    foreach (var comm in comments)
+                    {
+                        comm.Author = await _context.Users.Where(i => i.Id == comm.AuthorId).FirstOrDefaultAsync();
+                    }
+                    empty = false;
+                }
                 foreach(var item in requests)
                 {
                     item.User = await _context.Users.Where(i => i.Id == item.UserId).FirstAsync();
@@ -201,7 +213,8 @@ namespace Rolling_Tavern.Controllers
                     GameId = temp.GameId,
                     Game = game,
                     Creator = creator,
-                    Requests = requests
+                    Requests = requests,
+                    Comments = comments
                 };
                 if (meeting == null)
                 {
@@ -212,8 +225,39 @@ namespace Rolling_Tavern.Controllers
                     CurrentUser = currentUser,
                     CurrentMeeting = meeting
                 };
+                info.CommentsEmpty = empty;
                 return View(info);
             }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "user")]
+        public async Task<IActionResult> CreateComment(int? id, string commentText)
+        {
+            ApplicationUser currentUser = await _userManager.GetUserAsync(User);
+            Meeting meeting = await _context.Meetings.Where(i => i.MeetingId == id).FirstOrDefaultAsync();
+            Comment comment = new()
+            {
+                CommentContent = commentText,
+                DateOfComment = DateTime.Now,
+                AuthorId = currentUser.Id,
+                MeetingId = meeting.MeetingId
+            };
+            _context.Add(comment);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "user,admin")]
+        public async Task<IActionResult> DeleteComment(int? id)
+        {
+            Comment comment = await _context.Comments.FindAsync(id);
+            _context.Comments.Remove(comment);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         [HttpPost]
@@ -467,6 +511,14 @@ namespace Rolling_Tavern.Controllers
                 foreach (var item in requests)
                 {
                     _context.Requests.Remove(item);
+                }
+            }
+            if(_context.Comments.Where(i=>i.MeetingId==meeting.MeetingId).Any())
+            {
+                List<Comment> comments = await _context.Comments.Where(i => i.MeetingId == meeting.MeetingId).ToListAsync();
+                foreach(var item in comments)
+                {
+                    _context.Comments.Remove(item);
                 }
             }
             _context.Meetings.Remove(meeting);

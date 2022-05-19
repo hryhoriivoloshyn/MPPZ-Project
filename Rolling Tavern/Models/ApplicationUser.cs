@@ -44,6 +44,7 @@ namespace Rolling_Tavern.Models
         [PersonalData]
         public virtual ICollection<Meeting> CreatedMeetings { get; set; }
 
-
+        [PersonalData]
+        public virtual ICollection<Comment> Comments { get; set; }
     }
 }
