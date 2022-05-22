@@ -24,7 +24,6 @@
                                 <img src="@Model.CurrentMeeting.PhotoLink" style="margin-top:10px; max-width: 450px; max-height: 350px;" />
                             </div>
                             <div class="form-group">
-                                <h5>Гра: <u>@Model.CurrentMeeting.Game.GameName</u></h5>
                                 <label>Дата проведення зустрічі: @Model.CurrentMeeting.DateOfMeeting</label>
                             </div>
                             <div class="form-group">
@@ -53,16 +52,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                @if (Model.CurrentMeeting.Requests.Any() == true)
-                                {
-                                    <label style="text-align:center;">
-                                        @Model.CurrentMeeting.Requests.Count(i => i.StateId == 2) з @Model.CurrentMeeting.Game.MaxAmountOfPlayers гравців знайдено.
-                                    </label>
-                                }
-                                else
-                                {
-                                    <label style="text-align:center;">Гравців ще не знайдено.</label>
-                                }
+                                
                             </div>
                             @if (!Model.Role)
                             {

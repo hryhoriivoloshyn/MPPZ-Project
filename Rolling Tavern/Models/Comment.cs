@@ -15,7 +15,10 @@ namespace Rolling_Tavern.Models
         public DateTime DateOfComment { get; set; }
         public long? AuthorId { get; set; }
         public int? MeetingId { get; set; }
+        [Required]
+        public int Rating { get; set; }
         public virtual ApplicationUser Author { get; set; }
         public virtual Meeting Meeting { get; set; }
+        
     }
 }

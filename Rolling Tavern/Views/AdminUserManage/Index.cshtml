@@ -33,7 +33,6 @@
         <td>@user.Email</td>
         <td>@user.PhoneNumber</td>
 
-        <td><a asp-controller="UserProfile" asp-action="Index" asp-route-id="@user.Id" class="btn btn-outline-dark" role="button">Детальніше</a></td>
 
         @if (user.LockoutEnd > DateTimeOffset.Now)
         {

@@ -129,27 +129,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        @if (Model.CurrentMeeting.Requests.Any() == true && !check)
-                        {
-                            <label style="text-align:center;">
-                                @Model.CurrentMeeting.Requests.Count(i => i.StateId == 2) з @Model.CurrentMeeting.Game.MaxAmountOfPlayers членів гуртка знайдено,
-                                стань наступним!
-                            </label>
-                        }
-                        else if (check && request.StateId == 1)
-                        {
-                            <label style="text-align:center;">
-                                @Model.CurrentMeeting.Requests.Count(i => i.StateId == 2) з @Model.CurrentMeeting.Game.MaxAmountOfPlayers  членів гуртка знайдено,
-                                ви можете стати наступним!
-                            </label>
-                        }
-                        else if (check && request.StateId == 2)
-                        {
-                            <label style="text-align:center;">
-                                @Model.CurrentMeeting.Requests.Count(i => i.StateId == 2) з @Model.CurrentMeeting.Game.MaxAmountOfPlayers членів гуртка знайдено!
-                            </label>
-                        }
-                        else if (check && request.StateId == 3)
+                        @if (check && request.StateId == 3)
                         {
                             <label style="text-align:center;">
                                 Нажаль, ви не можете приєднатись до цього гуртка.
@@ -213,7 +193,7 @@
                     <div class="form-group">
                         @if (Model.CurrentMeeting.MinimalAge == null)
                         {
-                            <label>Вікові обмеження: +@Model.CurrentMeeting.Game.MinAgeOfPlayers</label>
+                           
                         }
                         else
                         {
@@ -328,17 +308,42 @@
                         <div class="container" style="margin-bottom:">
                             <div class="row">
                                 <div class="col">
-                                    <h5 style="margin-top:25px">Напишість свій коментар:</h5>
+                                    <h5 style="margin-top:25px">Напишіть свій відгук:</h5>
                                 </div>
                                 <div class="col-7">
                                     <form asp-action="CreateComment" method="post" style="margin-left:-80px">
                                         <div class="row">
                                             <div class="col-7">
                                                 <textarea name="commentText" cols="35" rows="3"></textarea>
-                                                <input type="hidden" name="id" value="@Model.CurrentMeeting.MeetingId" />
+                                                <input type="hidden" name="id" value="@Model.CurrentMeeting.MeetingId"/>
                                             </div>
                                             <div class="col-3">
-                                                <input type="submit" style="font-family: 'Bluu Next Cyrillic'; background: #B82406;font-size:20px;margin-top:15px" value="Створити" class="btn btn-primary" />
+                                                <input type="submit" style="font-family: 'Bluu Next Cyrillic'; background: #B82406; font-size: 20px; margin-top: 15px" value="Створити" class="btn btn-primary"/>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-3">
+                                                <h5 style="margin-top:25px">Оцініть гурток</h5>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="rating" id="inlineRadio1" value="1">
+                                                <label class="form-check-label" for="inlineRadio1">1</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="rating" id="inlineRadio2" value="2">
+                                                <label class="form-check-label" for="inlineRadio2">2</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="rating" id="inlineRadio3" value="3">
+                                                <label class="form-check-label" for="inlineRadio3">3</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="rating" id="inlineRadio4" value="4">
+                                                <label class="form-check-label" for="inlineRadio4">4</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="Rating" id="inlineRadio5" value="5">
+                                                <label class="form-check-label" for="inlineRadio5">5</label>
                                             </div>
                                         </div>
                                     </form>
@@ -360,6 +365,9 @@
                                         <div style="text-align:center">
                                             <h5>@comment.Author.FirstName</h5>
                                         </div>
+                                    </div>
+                                    <div class="col">
+                                        <span style="margin-top:auto; margin-bottom:auto" disabled>@comment.Rating/5</span>
                                     </div>
                                     <div class="col-5">
                                         <textarea style="margin-top:auto; margin-bottom:auto; width:350px; height:100px; margin-left:90px" disabled>@comment.CommentContent</textarea>
@@ -424,6 +432,11 @@
         width: 100%;
     }
 </style>
+<script>
+    $(document).ready(function(){
+        $('#input-9').rating();
+    });
+</script>
     <script>
         window.onload = function () {
             setAddress();

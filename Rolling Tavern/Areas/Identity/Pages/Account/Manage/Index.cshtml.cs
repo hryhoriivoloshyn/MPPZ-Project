@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Rolling_Tavern.Controllers;
+using Rolling_Tavern.Enums;
 using Rolling_Tavern.Models;
 
 namespace Rolling_Tavern.Areas.Identity.Pages.Account.Manage
@@ -58,7 +59,7 @@ namespace Rolling_Tavern.Areas.Identity.Pages.Account.Manage
             {
                 foreach(var item in tempData)
                 {
-                    BoardGame game = db.BoardGames.Where(m => m.GameId == item.GameId).First();
+                    BoardGame game = db.BoardGames.Where(m => m.GameId ==StaticValues.DefaultGameId)?.First();
                     List<Request> requests = await db.Requests.Where(r => r.MeetingId == item.MeetingId).ToListAsync();
                     data.Add(new Meeting()
                     {

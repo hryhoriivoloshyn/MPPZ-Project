@@ -23,6 +23,7 @@ namespace Rolling_Tavern.Data
         public virtual DbSet<State> States { get; set; }
         public virtual DbSet<GameImage> GameImages { get; set; }
         public virtual DbSet<Comment> Comments { get; set; }
+        public virtual DbSet<Ratings> Ratings { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

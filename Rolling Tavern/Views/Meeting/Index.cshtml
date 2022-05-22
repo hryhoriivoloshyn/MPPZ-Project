@@ -25,25 +25,9 @@
                 <input type="submit" value="Знайти" class="btn btn-dark"/> |
                 <a asp-action="Index">Всі гуртки</a>
             </div>
-            <!--<div class="dropdown show col-2">
-                <a class="btn btn-dark dropdown-toggle ml-auto" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Сортувати
-                </a>-->
-                @*<div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                    <a class="dropdown-item" asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]">Cортувати за назвою</a>
-                    <a class="dropdown-item" asp-action="Index" asp-route-sortOrder="@ViewData["DateSortParm"]">Сортувати за датою</a>
-                </div>*@
-    
-            @*<a class="dropdown-item" asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]">Cортувати за назвою</a>
-            <a class="dropdown-item" asp-action="Index" asp-route-sortOrder="@ViewData["DateSortParm"]">Сортувати за датою</a>*@
-            <!--</div>-->
+            
         </div>
     </form>
-    
-    
-    @*<a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]">Cортувати за назвою</a>
-    <a asp-action="Index" asp-route-sortOrder="@ViewData["DateSortParm"]">Сортувати за датою</a>*@
-
 
     <div class="row justify-content-md-center" style="margin-left: auto; margin-right: auto;">
         @if (Model?.Any() == true)
@@ -75,14 +59,13 @@
                                 }
                                 @if (meeting.MinimalAge != null)
                                 {
-                                    <h6 class="card-text"><img src="~/images/DefaultUser.png" style="margin-bottom: 1%; height: 30px; display: inline-block; margin-left: 1%; width: 30px"/> @meeting.Requests.Count(i => i.StateId == 2)/@meeting.Game.MaxAmountOfPlayers <img src="~/images/DefaultUser.png" style="margin-bottom: 1%; height: 30px; display: inline-block; margin-left: 1%; width: 30px"/>+@meeting.MinimalAge.Value</h6>
-                                }
-                                else
-                                {
-                                    <h6 class="card-text"><img src="~/images/DefaultUser.png" style="margin-bottom: 1%; height: 30px; display: inline-block; margin-left: 1%; width: 30px"/> @meeting.Requests.Count(i => i.StateId == 2)/@meeting.Game.MaxAmountOfPlayers <img src="~/images/DefaultUser.png" style="margin-bottom: 1%; height: 30px; display: inline-block; margin-left: 1%; width: 30px"/>+@meeting.Game.MinAgeOfPlayers</h6>
+                                    <h6 class="card-text">
+                                        <img src="~/images/DefaultUser.png" style="margin-bottom: 1%; height: 30px; display: inline-block; margin-left: 1%; width: 30px"/>
+                                        +@meeting.MinimalAge.Value
+                                    </h6>
                                 }
                                 <h6 class="card-text">@meeting.AddresOfMeeting</h6>
-                                <h6 class="card-text">@meeting.DateOfMeeting</h6>
+                                
 
                             </div>
 

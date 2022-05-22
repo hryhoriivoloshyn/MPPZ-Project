@@ -237,7 +237,7 @@ namespace Rolling_Tavern.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "user")]
-        public async Task<IActionResult> CreateComment(int? id, string commentText)
+        public async Task<IActionResult> CreateComment(int? id, string commentText, int rating)
         {
             ApplicationUser currentUser = await _userManager.GetUserAsync(User);
             Meeting meeting = await _context.Meetings.Where(i => i.MeetingId == id).FirstOrDefaultAsync();
@@ -246,7 +246,8 @@ namespace Rolling_Tavern.Controllers
                 CommentContent = commentText,
                 DateOfComment = DateTime.Now,
                 AuthorId = currentUser.Id,
-                MeetingId = meeting.MeetingId
+                MeetingId = meeting.MeetingId,
+                Rating= rating
             };
             _context.Add(comment);
             await _context.SaveChangesAsync();
@@ -360,7 +361,7 @@ namespace Rolling_Tavern.Controllers
             {
                 ApplicationUser currentUser = await _userManager.GetUserAsync(User);
                 var temp = await _context.Meetings.Where(m => m.MeetingId == id).FirstOrDefaultAsync();
-                BoardGame game = await _context.BoardGames.Where(i => i.GameId == temp.GameId).FirstOrDefaultAsync();
+                BoardGame game = await _context.BoardGames.Where(i => i.GameId == StaticValues.DefaultGameId).FirstOrDefaultAsync();
                 ApplicationUser creator = await _context.Users.Where(i => i.Id == temp.CreatorId).FirstOrDefaultAsync();
                 List<Request> requests = await _context.Requests.Where(i => i.MeetingId == temp.MeetingId).ToListAsync();
                 Meeting meeting = new Meeting
@@ -374,7 +375,7 @@ namespace Rolling_Tavern.Controllers
                     PhotoLink = temp.PhotoLink,
                     CreatorId = temp.CreatorId,
                     MinimalAge = temp.MinimalAge,
-                    GameId = temp.GameId,
+                    GameId = StaticValues.DefaultGameId,
                     Game = game,
                     Creator = creator,
                     Requests = requests
