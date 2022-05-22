@@ -37,6 +37,7 @@ namespace Rolling_Tavern.Controllers
             public Meeting CurrentMeeting;
             public bool Role { get; set; }
             public bool CommentsEmpty { get; set; }
+            public bool UserCommentEmpty { get; set; }
             public CurrentInfo() {}
             public CurrentInfo(ApplicationUser user ,Meeting meeting)
             {
@@ -186,6 +187,7 @@ namespace Rolling_Tavern.Controllers
                 List<Request> requests = await _context.Requests.Where(i => i.MeetingId == temp.MeetingId).ToListAsync();
                 List<Comment> comments = null;
                 bool empty = true;
+                bool userComment = true;
                 if(_context.Comments.Where(i => i.MeetingId==id).Any())
                 {
                     comments = await _context.Comments.Where(i => i.MeetingId == id).ToListAsync();
@@ -194,6 +196,7 @@ namespace Rolling_Tavern.Controllers
                         comm.Author = await _context.Users.Where(i => i.Id == comm.AuthorId).FirstOrDefaultAsync();
                     }
                     empty = false;
+                    userComment = !comments.Where(i => i.AuthorId == currentUser.Id).Any();
                 }
                 foreach(var item in requests)
                 {
@@ -226,6 +229,7 @@ namespace Rolling_Tavern.Controllers
                     CurrentMeeting = meeting
                 };
                 info.CommentsEmpty = empty;
+                info.UserCommentEmpty = userComment;
                 return View(info);
             }
         }
