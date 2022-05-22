@@ -320,15 +320,15 @@
     <div>
         <center>
             <div>
-                <h4 style="text-align:center">
+                <h4 style="text-align:center; margin-left:5px; margin-top:20px">
                     Коментарі
                 </h4>
                 @if (Model.CurrentUser != null && Model.CurrentUser.Id != Model.CurrentMeeting.CreatorId && Model.Role == false)
                 {
                     @if (!Model.UserCommentEmpty)
                     {
-                        <div style="text-align:center">
-                            <h5>Ви вже написали коментар на цьому записі.</h5>
+                        <div style="text-align:center;">
+                            <h5 style="margin-left:5px">Ви вже написали коментар на цьому записі.</h5>
                         </div>
                     }
                     else
@@ -336,17 +336,17 @@
                         <div class="container" style="margin-bottom:">
                             <div class="row">
                                 <div class="col">
-                                    <h5>Напишість свій коментар:</h5>
+                                    <h5 style="margin-top:25px">Напишість свій коментар:</h5>
                                 </div>
                                 <div class="col-7">
-                                    <form asp-action="CreateComment" method="post">
+                                    <form asp-action="CreateComment" method="post" style="margin-left:-80px">
                                         <div class="row">
                                             <div class="col-7">
                                                 <textarea name="commentText" cols="35" rows="3"></textarea>
                                                 <input type="hidden" name="id" value="@Model.CurrentMeeting.MeetingId" />
                                             </div>
                                             <div class="col-3">
-                                                <input type="submit" style="font-family: 'Bluu Next Cyrillic'; background: #B82406;font-size:20px;margin-top:30px" value="Створити" class="btn btn-primary" />
+                                                <input type="submit" style="font-family: 'Bluu Next Cyrillic'; background: #B82406;font-size:20px;margin-top:15px" value="Створити" class="btn btn-primary" />
                                             </div>
                                         </div>
                                     </form>
@@ -370,7 +370,7 @@
                                         </div>
                                     </div>
                                     <div class="col-5">
-                                        <h5 style="margin-top:auto; margin-bottom:auto;">@comment.CommentContent</h5>
+                                        <textarea style="margin-top:auto; margin-bottom:auto; width:350px; height:100px; margin-left:90px" disabled>@comment.CommentContent</textarea>
                                     </div>
                                     <div class="col-4">
                                         <h5 style="margin-top:5px">@comment.DateOfComment.ToString("MM/dd/yyyy HH:mm")</h5>
@@ -390,7 +390,7 @@
                     else
                     {
                         <div>
-                            <label>Кометарів ще немає</label>
+                            <label style="margin-left:5px">Кометарів ще немає</label>
                         </div>
                     }
                 </div>
