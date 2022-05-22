@@ -48,10 +48,6 @@
                     <div class="form-group">
                         <img src="@Model.CurrentMeeting.PhotoLink" style="margin-top:10px; max-width: 450px; max-height: 350px;" />
                     </div>
-                  
-                    <div class="form-group">
-                        <label>Час роботи: @Model.CurrentMeeting.DateOfMeeting</label>
-                    </div>
                     <div class="form-group">
                         <h5>Опис гуртка: </h5>
                         <label>@Model.CurrentMeeting.Description</label>
@@ -134,10 +130,6 @@
                             <label style="text-align:center;">
                                 Нажаль, ви не можете приєднатись до цього гуртка.
                             </label>
-                        }
-                        else
-                        {
-                            <label style="text-align:center;">Членів гуртка ще не знайдено.</label>
                         }
                     </div>
                     <div class="form-group">
