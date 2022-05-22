@@ -48,10 +48,6 @@
                     <div class="form-group">
                         <img src="@Model.CurrentMeeting.PhotoLink" style="margin-top:10px; max-width: 450px; max-height: 350px;" />
                     </div>
-                  
-                    <div class="form-group">
-                        <label>Час роботи: @Model.CurrentMeeting.DateOfMeeting</label>
-                    </div>
                     <div class="form-group">
                         <h5>Опис гуртка: </h5>
                         <label>@Model.CurrentMeeting.Description</label>
@@ -132,21 +128,21 @@
                         @if (Model.CurrentMeeting.Requests.Any() == true && !check)
                         {
                             <label style="text-align:center;">
-                                @Model.CurrentMeeting.Requests.Count(i => i.StateId == 2) з @Model.CurrentMeeting.Game.MaxAmountOfPlayers членів гуртка знайдено,
+                                @Model.CurrentMeeting.Requests.Count(i => i.StateId == 2) членів гуртка знайдено,
                                 стань наступним!
                             </label>
                         }
                         else if (check && request.StateId == 1)
                         {
                             <label style="text-align:center;">
-                                @Model.CurrentMeeting.Requests.Count(i => i.StateId == 2) з @Model.CurrentMeeting.Game.MaxAmountOfPlayers  членів гуртка знайдено,
+                                @Model.CurrentMeeting.Requests.Count(i => i.StateId == 2) членів гуртка знайдено,
                                 ви можете стати наступним!
                             </label>
                         }
                         else if (check && request.StateId == 2)
                         {
                             <label style="text-align:center;">
-                                @Model.CurrentMeeting.Requests.Count(i => i.StateId == 2) з @Model.CurrentMeeting.Game.MaxAmountOfPlayers членів гуртка знайдено!
+                                @Model.CurrentMeeting.Requests.Count(i => i.StateId == 2) членів гуртка знайдено!
                             </label>
                         }
                         else if (check && request.StateId == 3)
