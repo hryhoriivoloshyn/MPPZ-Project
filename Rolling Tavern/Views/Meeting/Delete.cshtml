@@ -14,7 +14,7 @@
     <div class="page-content" onload="setAddress()">
         <h2 style="text-align:center">@Model.CurrentMeeting.MeetingName</h2>
         <hr style="width:60vw" />
-        <h3 style="text-align:center">Ви впевнені, що хочете видалити цю зустріч?</h3>
+        <h3 style="text-align:center">Ви впевнені, що хочете видалити цей гурток?</h3>
         <form>
             <div class="row justify-content-around">
                 <div class="col-4" style="margin-left:250px; width:fit-content;">
@@ -24,10 +24,9 @@
                                 <img src="@Model.CurrentMeeting.PhotoLink" style="margin-top:10px; max-width: 450px; max-height: 350px;" />
                             </div>
                             <div class="form-group">
-                                <label>Дата проведення зустрічі: @Model.CurrentMeeting.DateOfMeeting</label>
                             </div>
                             <div class="form-group">
-                                <h5>Опис зустрічі: </h5>
+                                <h5>Опис гуртка: </h5>
                                 <label>@Model.CurrentMeeting.Description</label>
                             </div>
                             <div class="form-group">
@@ -41,7 +40,7 @@
                     <div class="form-row profile-row">
                         <div class="col-md-8">
                             <div class="form-group">
-                                <h5>Організатор зустрічі: </h5>
+                                <h5>Організатор гуртка: </h5>
                                 <div>
                                     <img src="@Model.CurrentMeeting.Creator.ProfilePicture" class="round" style="height: 100px; width: 100px" /><h5 style="margin-left:25px;">@Model.CurrentMeeting.Creator.FirstName</h5>
                                     <div style="text-align:center">
@@ -57,7 +56,7 @@
                             @if (!Model.Role)
                             {
                                 <div class="form-group">
-                                    <a type="button" class="nav-link text-white" style="text-align: center; font-family: Bluu Next Cyrillic; background: #B82406; border-radius: 5px; padding: 5px; padding-left: 10px; padding-right: 10px; width:70%;" asp-action="Edit" asp-route-id="@Model.CurrentMeeting.MeetingId">Редагувати зустріч</a>
+                                    <a type="button" class="nav-link text-white" style="text-align: center; font-family: Bluu Next Cyrillic; background: #B82406; border-radius: 5px; padding: 5px; padding-left: 10px; padding-right: 10px; width:70%;" asp-action="Edit" asp-route-id="@Model.CurrentMeeting.MeetingId">Редагувати гурток</a>
                                 </div>
                             }
                             <div class="form-group">
@@ -65,7 +64,7 @@
                             </div>
 
                             <div class="form-group">
-                                <h5>Адреса зустрічі:</h5>
+                                <h5>Адреса гуртка:</h5>
                                 <label id="address">@Model.CurrentMeeting.AddresOfMeeting</label>
                             </div>
                             <div class="form-group" id="map"></div>
@@ -97,7 +96,7 @@
         <div style="padding-bottom: 5px">
             <center>
                 <div style="margin-top: 5px;">
-                    <a asp-action="Index" style="text-align: right; color: #333333; " class="text-muted">До списку зустрічей</a>
+                    <a asp-action="Index" style="text-align: right; color: #333333; " class="text-muted">До списку гуртків</a>
                 </div>
             </center>
         </div>
